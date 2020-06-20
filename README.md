@@ -30,6 +30,12 @@ pip install -r requirements.txt
 python3 manage.py migrate
 ```
 
+Создайте администратора для использования панели администратора сайта
+
+```sh
+python3 manage.py createsuperuser
+```
+
 Запустите разработческий сервер
 
 ```sh
