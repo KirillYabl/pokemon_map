@@ -24,6 +24,12 @@
 pip install -r requirements.txt
 ```
 
+Создайте БД командой
+
+```sh
+python3 manage.py migrate
+```
+
 Запустите разработческий сервер
 
 ```sh
