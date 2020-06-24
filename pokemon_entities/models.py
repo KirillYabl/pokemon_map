@@ -1,6 +1,19 @@
 from django.db import models
 
 
+class PokemonElementType(models.Model):
+    title = models.CharField(verbose_name='название стихии', max_length=200)
+    image = models.ImageField(verbose_name='картинка', null=True)
+    strong_against = models.ManyToManyField(verbose_name='силен против',
+                                            to='self',
+                                            null=True,
+                                            blank=True,
+                                            symmetrical=False)
+
+    def __str__(self):
+        return self.title
+
+
 class Pokemon(models.Model):
     title = models.CharField(verbose_name='имя', max_length=200)
     image = models.ImageField(verbose_name='картинка', null=True, blank=True)
@@ -8,15 +21,17 @@ class Pokemon(models.Model):
     en_title = models.CharField(verbose_name='имя на английском', max_length=200, default='', null=True, blank=True)
     jp_title = models.CharField(verbose_name='имя на японском', max_length=200, default='', null=True, blank=True)
     previous_evolution = models.ForeignKey(
-        to='self',
         verbose_name='предыдущая эволюция',
+        to='self',
         on_delete=models.SET_NULL,
         null=True,
         blank=True
     )
+    element_type = models.ManyToManyField(verbose_name='стихии покемона', to=PokemonElementType, null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        elements = [str(element) for element in self.element_type.all()]
+        return f'{self.title}. Стихии: "{", ".join(elements)}"'
 
 
 class PokemonEntity(models.Model):
@@ -32,4 +47,4 @@ class PokemonEntity(models.Model):
     stamina = models.IntegerField(verbose_name='выносливость', null=True, blank=True)
 
     def __str__(self):
-        return f'{self.pokemon}: {self.lat}, {self.lon}'
+        return f'{self.pokemon.title}: {self.lat}, {self.lon}'

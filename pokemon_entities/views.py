@@ -8,6 +8,12 @@ DEFAULT_IMAGE_URL = "https://vignette.wikia.nocookie.net/pokemon/images/6/6e/%21
 
 
 def add_pokemon(folium_map, lat, lon, name, image_url=DEFAULT_IMAGE_URL):
+    html = f"""
+        <h4>{name}</h4><br>
+        <code>lat: {lat}</code><br>
+        <code>lon: {lon}</code>
+        """
+
     icon = folium.features.CustomIcon(
         image_url,
         icon_size=(50, 50),
@@ -16,6 +22,7 @@ def add_pokemon(folium_map, lat, lon, name, image_url=DEFAULT_IMAGE_URL):
         [lat, lon],
         tooltip=name,
         icon=icon,
+        popup=html
     ).add_to(folium_map)
 
 
@@ -29,7 +36,7 @@ def show_all_pokemons(request):
         add_pokemon(folium_map=folium_map,
                     lat=pokemon_entity.lat,
                     lon=pokemon_entity.lon,
-                    name=pokemon_entity.pokemon.title,
+                    name=pokemon_entity.pokemon.title.encode('utf-8'),
                     image_url=pokemon_image_path)
 
     pokemons_on_page = []
@@ -76,6 +83,17 @@ def show_pokemon(request, pokemon_id):
         previous_evolution['pokemon_id'] = requested_pokemon.previous_evolution.id
         previous_evolution['img_url'] = requested_pokemon_previous_evolution_image_url
 
+    element_type = []
+    elements = requested_pokemon.element_type.all()
+    if elements:
+        for element in elements:
+            strong_against = [weak_element.title for weak_element in element.strong_against.all()]
+            element_type.append({
+                'title': element.title,
+                'img': element.image.url,
+                'strong_against': strong_against
+            })
+
     requested_pokemon_image_url = DEFAULT_IMAGE_URL
     if requested_pokemon.image:
         requested_pokemon_image_url = requested_pokemon.image.url
@@ -88,7 +106,8 @@ def show_pokemon(request, pokemon_id):
         "img_url": requested_pokemon_image_url,
         "entities": [],
         "next_evolution": next_evolution,
-        "previous_evolution": previous_evolution
+        "previous_evolution": previous_evolution,
+        "element_type": element_type
     }
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
@@ -108,6 +127,5 @@ def show_pokemon(request, pokemon_id):
                     lon=pokemon_entity.lon,
                     name=requested_pokemon.title,
                     image_url=pokemon_image_path)
-
     return render(request, "pokemon.html", context={'map': folium_map._repr_html_(),
                                                     'pokemon': pokemon_json})
