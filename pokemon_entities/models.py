@@ -4,7 +4,13 @@ from django.db import models
 class PokemonElementType(models.Model):
     title = models.CharField(verbose_name='название стихии', max_length=200)
     image = models.ImageField(verbose_name='картинка', null=True)
-    strong_against = models.ManyToManyField(verbose_name='силен против', to='self', blank=True, symmetrical=False)
+    strong_against = models.ManyToManyField(
+        verbose_name='силен против',
+        to='self',
+        blank=True,
+        symmetrical=False,
+        related_name='weaknesses'
+    )
 
     def __str__(self):
         return self.title
@@ -21,9 +27,15 @@ class Pokemon(models.Model):
         to='self',
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name='next_evolutions'
     )
-    element_type = models.ManyToManyField(verbose_name='стихии покемона', to=PokemonElementType, blank=True)
+    element_type = models.ManyToManyField(
+        verbose_name='стихии покемона',
+        to=PokemonElementType,
+        blank=True,
+        related_name='pokemons'
+    )
 
     def __str__(self):
         elements = [str(element) for element in self.element_type.all()]
@@ -31,7 +43,7 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    pokemon = models.ForeignKey(to=Pokemon, verbose_name='покемон', on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(to=Pokemon, verbose_name='покемон', on_delete=models.CASCADE, related_name='entities')
     lat = models.FloatField(verbose_name='широта')
     lon = models.FloatField(verbose_name='долгота')
     appeared_at = models.DateTimeField(verbose_name='появится', null=True, blank=True)

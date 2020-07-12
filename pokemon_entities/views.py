@@ -62,7 +62,7 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     # unsafe get because 'show_all_pokemons' always return pokemons
     requested_pokemon = Pokemon.objects.get(id=pokemon_id)
-    evolutions = requested_pokemon.pokemon_set.all()
+    evolutions = requested_pokemon.next_evolutions.all()
 
     next_evolution = {}
     if evolutions:
