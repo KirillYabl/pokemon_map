@@ -69,18 +69,22 @@ def show_pokemon(request, pokemon_id):
         evolution_pokemon_image_url = DEFAULT_IMAGE_URL
         if evolution_pokemon.image:
             evolution_pokemon_image_url = evolution_pokemon.image.url
-        next_evolution['title_ru'] = evolution_pokemon.title
-        next_evolution['pokemon_id'] = evolution_pokemon.id
-        next_evolution['img_url'] = evolution_pokemon_image_url
+        next_evolution.update({
+            'title_ru': evolution_pokemon.title,
+            'pokemon_id': evolution_pokemon.id,
+            'img_url': evolution_pokemon_image_url
+        })
 
     previous_evolution = {}
     if requested_pokemon.previous_evolution:
         requested_pokemon_previous_evolution_image_url = DEFAULT_IMAGE_URL
         if requested_pokemon.previous_evolution.image:
             requested_pokemon_previous_evolution_image_url = requested_pokemon.previous_evolution.image.url
-        previous_evolution['title_ru'] = requested_pokemon.previous_evolution.title
-        previous_evolution['pokemon_id'] = requested_pokemon.previous_evolution.id
-        previous_evolution['img_url'] = requested_pokemon_previous_evolution_image_url
+        next_evolution.update({
+            'title_ru': requested_pokemon.previous_evolution.title,
+            'pokemon_id': requested_pokemon.previous_evolution.id,
+            'img_url': requested_pokemon_previous_evolution_image_url
+        })
 
     element_type = []
     elements = requested_pokemon.element_type.all()
