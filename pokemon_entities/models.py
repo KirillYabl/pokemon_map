@@ -13,7 +13,7 @@ class PokemonElementType(models.Model):
 class Pokemon(models.Model):
     title = models.CharField(verbose_name='имя', max_length=200)
     image = models.ImageField(verbose_name='картинка', null=True, blank=True)
-    description = models.TextField(verbose_name='описание', default='', null=True, blank=True)
+    description = models.TextField(verbose_name='описание', default='', blank=True)
     en_title = models.CharField(verbose_name='имя на английском', max_length=200, default='', blank=True)
     jp_title = models.CharField(verbose_name='имя на японском', max_length=200, default='', blank=True)
     previous_evolution = models.ForeignKey(
