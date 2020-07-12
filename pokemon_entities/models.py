@@ -23,7 +23,7 @@ class Pokemon(models.Model):
         null=True,
         blank=True
     )
-    element_type = models.ManyToManyField(verbose_name='стихии покемона', to=PokemonElementType, null=True, blank=True)
+    element_type = models.ManyToManyField(verbose_name='стихии покемона', to=PokemonElementType, blank=True)
 
     def __str__(self):
         elements = [str(element) for element in self.element_type.all()]
