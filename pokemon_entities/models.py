@@ -4,11 +4,7 @@ from django.db import models
 class PokemonElementType(models.Model):
     title = models.CharField(verbose_name='название стихии', max_length=200)
     image = models.ImageField(verbose_name='картинка', null=True)
-    strong_against = models.ManyToManyField(verbose_name='силен против',
-                                            to='self',
-                                            null=True,
-                                            blank=True,
-                                            symmetrical=False)
+    strong_against = models.ManyToManyField(verbose_name='силен против', to='self', blank=True, symmetrical=False)
 
     def __str__(self):
         return self.title
