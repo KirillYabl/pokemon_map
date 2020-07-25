@@ -87,14 +87,13 @@ def show_pokemon(request, pokemon_id):
 
     element_type = []
     elements = requested_pokemon.element_type.all()
-    if elements:
-        for element in elements:
-            strong_against = [weak_element.title for weak_element in element.strong_against.all()]
-            element_type.append({
-                'title': element.title,
-                'img': element.image.url,
-                'strong_against': strong_against
-            })
+    for element in elements:
+        strong_against = [weak_element.title for weak_element in element.strong_against.all()]
+        element_type.append({
+            'title': element.title,
+            'img': element.image.url,
+            'strong_against': strong_against
+        })
 
     requested_pokemon_image_url = DEFAULT_IMAGE_URL
     if requested_pokemon.image:
